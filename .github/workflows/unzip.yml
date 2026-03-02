@@ -1,4 +1,4 @@
-name: Auto Extract ZIP
+name: Auto Extract ZIP (No Folder)
 
 on: [push]
 
@@ -11,16 +11,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Extract ZIP
+      - name: Extract ZIP to root
         run: |
           for file in *.zip; do
-            unzip -o "$file" -d extracted
+            unzip -o "$file"
           done
 
-      - name: Commit results
+      - name: Remove ZIP
+        run: rm -f *.zip
+
+      - name: Commit extracted files
         run: |
           git config user.name github-actions
           git config user.email actions@github.com
           git add .
-          git commit -m "Auto extract zip" || echo "No changes"
+          git commit -m "Auto extract zip to root" || echo "No changes"
           git push
